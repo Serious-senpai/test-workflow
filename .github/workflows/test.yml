@@ -9,6 +9,11 @@ jobs:
   test:
     name: Run C++
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        key: [123, 456, 789]
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -17,4 +22,4 @@ jobs:
       run: g++ -O3 main.cpp -o main.exe
   
     - name: Run executable
-      run: ./main.exe 123
+      run: ./main.exe ${{ matrix.key }}
