@@ -7,45 +7,14 @@ permissions:
 
 jobs:
   test:
-    name: Run test
+    name: Run C++
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        x: [1, 2, 3, 4, 5]
-        y: [a, b, c]
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Run main.py
-        run: python main.py ${{ matrix.x }} ${{ matrix.y }} > input-${{ matrix.x }}-${{ matrix.y }}.txt
-
-      - name: Upload result
-        uses: actions/upload-artifact@v4
-        with:
-          name: upload-${{ matrix.x }}-${{ matrix.y }}
-          path: input-${{ matrix.x }}-${{ matrix.y }}.txt
-
-  summary:
-    name: Summary results
-    needs: test
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: .
-          merge-multiple: true
-
-      - name: Run summary.py
-        run: python summary.py
+    - name: Checkout repository
+      uses: actions/checkout@v4
+  
+    - name: Compile C++
+      run: g++ -O3 main.cpp -o main.exe
+  
+    - name: Run executable
+      run: ./main.exe 123
