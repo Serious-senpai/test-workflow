@@ -42,4 +42,6 @@ jobs:
         path: .
 
     - name: Run executable
-      run: ./main.exe ${{ matrix.key }}
+      run: |
+        chmod +x main.exe
+        ./main.exe ${{ matrix.key }}
