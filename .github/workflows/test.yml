@@ -6,8 +6,25 @@ permissions:
   contents: read
 
 jobs:
-  test:
+  compile:
+    name: Compile C++
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Compile C++
+      run: g++ -O3 main.cpp -o main.exe
+
+    - name: Upload executable
+      uses: upload-artifact@v4
+      with:
+        name: executable
+        path: main.exe
+
+  run:
     name: Run C++
+    needs: compile
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -17,9 +34,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-  
-    - name: Compile C++
-      run: g++ -O3 main.cpp -o main.exe
-  
+
+    - name: Download executable
+      uses: download-artifact@v4
+      with:
+        name: executable
+        path: .
+
     - name: Run executable
       run: ./main.exe ${{ matrix.key }}
